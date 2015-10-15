@@ -27,7 +27,7 @@ C = ones(numPartitionsX - 1, 1);
 C = C * C_scalar;
 
 % generate a tri-diagonal matrix T, of size numPartitionsX - 1.
-T = spdiags([A, B, C], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
+TRI = spdiags([A, B, C], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
 
 % allocate memory for the solution mesh
 PRICE = zeros(numPartitionsT + 1, numPartitionsX + 1);
@@ -47,9 +47,9 @@ P_boundary = zeros(numPartitionsX - 1, 1);
 for i = 2:numPartitionsT + 1
     P_boundary(1) = A_scalar * PRICE(i, 1);
     P_boundary(end) = C_scalar * PRICE(i, end);
-    % we want to solve the equation: T * P(t = t) = P(t = t - 1) + P_boundary(t = t)
+    % we want to solve the equation: TRI * P(t = t) = P(t = t - 1) + P_boundary(t = t)
     PRICE(i, 2:numPartitionsX) = ...
-        (PRICE(i-1, 2:numPartitionsX) - P_boundary) \ T;
+        transpose((transpose(PRICE(i-1, 2:numPartitionsX)) - P_boundary) \ TRI);
 end
 
 P = PRICE(numPartitionsT+1, ceil((numPartitionsX + 1) / 2));
