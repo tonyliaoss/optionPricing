@@ -36,7 +36,7 @@ C = C * C_scalar;
 TRI = spdiags([A, B, C], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
 % we NEED this inverted matrix! For some reason, if I use the backslash '\'
 % operator to solve for linear equations in the following for loop, it doesn't
-% really work for me and insists on givine me 0 as an answer.
+% really work for me and insists on giving me 0 as an answer.
 TRIINV = inv(TRI);
 
 % allocate memory for the solution mesh
