@@ -64,7 +64,7 @@ end
 P = PRICE(numPartitionsT+1, ceil((numPartitionsX + 1) / 2));
 
 % interpolate the price at x = 0...
-P = interp1(X, PRICE(end, :), 0)
+P = interp1(X, PRICE(end, :), 0);
 
 end
 
