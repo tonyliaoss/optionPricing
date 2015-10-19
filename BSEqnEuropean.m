@@ -1,7 +1,7 @@
 function [ P ] = BSEqnEuropean( S, tau, E, r, sigma )
-% BsEqnEuropean: Gives the price of a European put option without
-% dividends, as computed by the closed-form Black-Scholes equations.
-%
+% Gives the price of a European put option without dividends, as computed
+% by the Black-Scholes equations.
+%   Detailed explanation goes here
 % INPUT PARAMETERS
 %   S - the current market value of the asset.
 %   tau - time to expiry of the option, expressed in years.
