@@ -34,10 +34,6 @@ C = C * C_scalar;
 
 % generate a tri-diagonal matrix T, of size numPartitionsX - 1.
 TRI = spdiags([A, B, C], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
-% we NEED this inverted matrix! For some reason, if I use the backslash '\'
-% operator to solve for linear equations in the following for loop, it doesn't
-% really work for me and insists on giving me 0 as an answer.
-TRIINV = inv(TRI);
 
 % allocate memory for the solution mesh
 PRICE = zeros(numPartitionsT + 1, numPartitionsX + 1);
@@ -59,7 +55,7 @@ for i = 2:numPartitionsT + 1
     P_boundary(end) = C_scalar * PRICE(i, end);
     % we want to solve the equation: TRI * P(t = t) = P(t = t - 1) + P_boundary(t = t)
     PRICE(i, 2:numPartitionsX) = ...
-        transpose(TRIINV * transpose((PRICE(i-1, 2:numPartitionsX) - P_boundary)));
+        transpose(TRI \ transpose((PRICE(i-1, 2:numPartitionsX) - P_boundary)));
 end
 P = PRICE(numPartitionsT+1, ceil((numPartitionsX + 1) / 2));
 
