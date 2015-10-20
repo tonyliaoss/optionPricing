@@ -32,7 +32,7 @@ C_scalar = (-(r * dt) / (2 * dx) - (sigma ^ 2 * dt) / (2 * dx ^ 2));
 C = ones(numPartitionsX - 1, 1);
 C = C * C_scalar;
 
-% generate a tri-diagonal matrix T, of size numPartitionsX - 1.
+% generate a tri-diagonal matrix TRI, of size numPartitionsX - 1.
 TRI = spdiags([A, B, C], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
 
 % allocate memory for the solution mesh

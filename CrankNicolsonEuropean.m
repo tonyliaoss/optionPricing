@@ -8,7 +8,7 @@ function  [ P ] = CrankNicolsonEuropean( S, tau, E, r, sigma )
 %   E - the strike price, or exercise price, of the option.
 %   r - the risk-free investment return per annum.
 %   sigma - the market volatility.
-numPartitionsX = 500;
+numPartitionsX = 1000;
 numPartitionsT = 500;
 
 % determine the maximum and minimum x values.
@@ -21,19 +21,31 @@ x_min = -x_max;
 dt = tau / numPartitionsT;
 dx = (x_max - x_min) / numPartitionsX;
 
-% compute coefficients A, B, and C.
-A_scalar = (r * dt / (2 * dx) - sigma ^ 2 * dt / (2 * dx ^ 2));
+% compute coefficients A, B, C, D, E, and F.
+A_scalar = (r * dt / (4 * dx) - sigma ^ 2 * dt / (4 * dx ^ 2));
 A = ones(numPartitionsX - 1, 1);
 A = A * A_scalar;
-B_scalar = (sigma ^ 2 * dt / dx ^ 2 + r * dt + 1);
+B_scalar = (0.5 * sigma ^ 2 * dt / dx ^ 2 + 0.5 * r * dt + 1);
 B = ones(numPartitionsX - 1, 1);
 B = B * B_scalar;
-C_scalar = (-(r * dt) / (2 * dx) - (sigma ^ 2 * dt) / (2 * dx ^ 2));
+C_scalar = (-(r * dt) / (4 * dx) - (sigma ^ 2 * dt) / (4 * dx ^ 2));
 C = ones(numPartitionsX - 1, 1);
 C = C * C_scalar;
+alpha_scalar = - A_scalar;
+alpha = ones(numPartitionsX - 1, 1);
+alpha = alpha * alpha_scalar;
+beta_scalar = ( -0.5 * sigma ^ 2 * dt / dx ^ 2 - 0.5 * r * dt + 1);
+beta = ones(numPartitionsX - 1, 1);
+beta = beta * beta_scalar;
+gamma_scalar = - C_scalar;
+gamma = ones(numPartitionsX - 1, 1);
+gamma = gamma * gamma_scalar;
 
-% generate a tri-diagonal matrix T, of size numPartitionsX - 1.
-TRI = spdiags([A, B, C], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
+% for the Crank-Nicolson method we need to generate two tri-diagonal matrices.
+% generate a tri-diagonal matrix TRI_t, of size numPartitionsX - 1, at time t.
+TRI_t = spdiags([A, B, C], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
+% generate a tri-diagonal matrix TRI_tplus, of size numPartitionsX - 1, at time t - 1.
+TRI_tprev = spdiags([alpha, beta, gamma], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
 
 % allocate memory for the solution mesh
 PRICE = zeros(numPartitionsT + 1, numPartitionsX + 1);
@@ -55,7 +67,11 @@ for i = 2:numPartitionsT + 1
     P_boundary(end) = C_scalar * PRICE(i, end);
     % we want to solve the equation: TRI * P(t = t) = P(t = t - 1) + P_boundary(t = t)
     PRICE(i, 2:numPartitionsX) = ...
-        transpose(TRI \ transpose((PRICE(i-1, 2:numPartitionsX) - P_boundary)));
+        transpose(TRI_t \ ...
+                  (TRI_tprev * transpose(PRICE(i-1, 2:numPartitionsX)) ...
+                   - transpose(P_boundary) ...
+                  ) ...
+                 );
 end
 P = PRICE(numPartitionsT+1, ceil((numPartitionsX + 1) / 2));
 
