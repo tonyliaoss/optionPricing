@@ -10,9 +10,9 @@ function [ P ] = ExplicitEuropean( S, tau, E, r, sigma )
 %   sigma - the market volatility.
 
 alpha = 0.2; % alpha = dt/(dx^2)
-numPartitionsX = 100;
+numPartitionsX = 200;
 
-z = 3; % variable for random walk
+z = 5; % variable for random walk
 S_t = S * exp((r - 0.5 * sigma^2) * tau + sigma * sqrt(tau) * z);
 x_max = log(S_t / S);
 x_min = -x_max;
@@ -44,7 +44,7 @@ end
 for t = 2:numPartitionsT+1
     for x = 2 : numPartitionsX
         PRICE(t, x) = sigma^2 * alpha / 2 * (PRICE(t-1, x+1) - 2 * PRICE(t-1, x) + PRICE(t-1, x-1)) ...
-                       + r * dt / dx * (PRICE(t-1, x+1) - PRICE(t-1, x)) ...
+                       + 0.5 * (r - 0.5 * sigma ^ 2) * dt / dx * (PRICE(t-1, x+1) - PRICE(t-1, x-1)) ...
                        + (1 - r * dt) * PRICE(t-1, x);
         if isnan(PRICE(t,x))
             fprintf('Diverged at: t = %i, x = %i\n', t, x);
