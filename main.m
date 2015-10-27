@@ -23,8 +23,8 @@ cne = CrankNicolsonEuropean(S, tau, E, r, sigma);
 % evaluating European options with successive over-relaxation...
 addpath('sor');
 sor_ee = NaN; % doesn't apply here. SOR only solves linear systems.
-sor_ie = ImplicitEuropean(S, tau, E, r, sigma);
-sor_cne = CrankNicolsonEuropean(S, tau, E, r, sigma);
+sor_ie = SORImplicitEuropean(S, tau, E, r, sigma);
+sor_cne = SORCrankNicolsonEuropean(S, tau, E, r, sigma);
 
 % Generate a table.
 methodNames = {'Black-Scholes'; 'Explicit'; 'Implicit'; 'Crank-Nicolson'};
