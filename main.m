@@ -1,3 +1,6 @@
+clc
+clear all
+
 % set test values...
 E = 105;
 r = 0.02;

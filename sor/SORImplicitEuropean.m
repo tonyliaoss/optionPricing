@@ -54,12 +54,11 @@ for i = 2:numPartitionsT + 1
     P_boundary(1) = A_scalar * PRICE(i, 1);
     P_boundary(end) = C_scalar * PRICE(i, end);
 
-    % we want to solve the equation: TRI * P(t = t) = P(t = t - 1) + P_boundary(t = t)
+    % this is the column vector in the equation TRI * x = b
+    rhs = transpose(PRICE(i-1, 2:numPartitionsX) - P_boundary);
+    % we want to solve the equation: TRI * P(t = t) = P(t = t - 1) - P_boundary(t = t)
     PRICE(i, 2:numPartitionsX) = ...
-        transpose(TRI \ ...
-                    transpose(PRICE(i-1, 2:numPartitionsX) ...
-                              - P_boundary) ...
-                 );
+        transpose(sor(TRI, rhs));
 end
 
 % interpolate the price at x = 0...
