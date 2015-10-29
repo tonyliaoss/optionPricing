@@ -66,14 +66,15 @@ for i = 2:numPartitionsT + 1
     P_boundary(1) = A_scalar * PRICE(i, 1);
     P_boundary(end) = C_scalar * PRICE(i, end);
 
+    PRICE_prev = transpose(PRICE(i-1, 2:numPartitionsX));
     % this is the 'right hand side' of the system of linear equation that we
     % wanna solve.
-    rhs = (TRI_tprev * transpose(PRICE(i-1, 2:numPartitionsX)) ...
+    rhs = (TRI_tprev * PRICE_prev ...
              - transpose(P_boundary));
     % we want to solve the equation:
     % TRI_t * P(t = t) = TRI_tprev * P(t = t - 1) - P_boundary(t = t)
     PRICE(i, 2:numPartitionsX) = ...
-        transpose(sor(TRI_t, rhs));
+        transpose(sor(TRI_t, rhs, PRICE_prev));
 end
 P = PRICE(numPartitionsT+1, ceil((numPartitionsX + 1) / 2));
 
