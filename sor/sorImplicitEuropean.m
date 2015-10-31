@@ -1,4 +1,4 @@
-function  [ P ] = ImplicitEuropean( S, tau, E, r, sigma )
+function  [ P ] = sorImplicitEuropean( S, tau, E, r, sigma )
 % ImplicitEuropean: Computes the fair value of the European put option
 % using the implicit Euler method.
 %   Detailed explanation goes here

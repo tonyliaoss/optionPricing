@@ -33,14 +33,27 @@ fprintf('  Using SOR for solving linear systems...\n');
 addpath('sor');
 sor_ee = NaN; % doesn't apply here. SOR only solves linear systems.
 tic
-sor_ie = SORImplicitEuropean(S, tau, E, r, sigma);
-sor_cne = SORCrankNicolsonEuropean(S, tau, E, r, sigma);
+sor_ie = sorImplicitEuropean(S, tau, E, r, sigma);
+sor_cne = sorCrankNicolsonEuropean(S, tau, E, r, sigma);
 fprintf('    ');
 toc
 
-% Generate a table.
-methodNames = {'Black-Scholes'; 'Explicit'; 'Implicit'; 'Crank-Nicolson'};
+% evaluate American options...
+fprintf('Evaluating pricing of American options...\n');
+addpath('psor')
+tic
+psor_ie  = psorImplicitAmerican(S, tau, E, r, sigma);
+psor_cne = psorCrankNicolsonAmerican(S, tau, E, r, sigma);
+fprintf('    ');
+toc
+
+% Generate tables...
+methodNamesEuropean = {'Black-Scholes'; 'Explicit'; 'Implicit'; 'Crank-Nicolson'};
 simple = [bse; ee; ie; cne];
 sor = [bse; sor_ee; sor_ie; sor_cne];
-euroTable = table(simple, sor, 'RowNames', methodNames)
+euroTable = table(simple, sor, 'RowNames', methodNamesEuropean)
+
+methodNamesAmerican = {'Implicit'; 'Crank-Nicolson'};
+psor = [psor_ie; psor_cne];
+amerTable = table(psor, 'RowNames', methodNamesAmerican)
 

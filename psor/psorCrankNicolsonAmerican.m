@@ -1,4 +1,4 @@
-function  [ P ] = CrankNicolsonEuropean( S, tau, E, r, sigma )
+function  [ P ] = psorCrankNicolsonAmerican( S, tau, E, r, sigma )
 % CrankNicolsonEuropean: Computes the fair value of the European put option
 % using the Crank-Nicolson implicit finite differences scheme.
 %   Detailed explanation goes here

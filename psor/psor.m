@@ -1,4 +1,4 @@
-function  [ x ] = sor( A, b, x0 )
+function  [ x ] = psor( A, b, x0 )
 % sor: Solves a system of linear equations using the successive over-relaxation
 % technique. Note that the error tolerance and maximum number of iterations are
 % hard-coded into this function.
