@@ -40,7 +40,7 @@ while norm(xold - x) > epsilon
 %  % because we want to use updated values as soon as it becomes available.
 %  % i.e. use Gauss-Seidel formulation instead of Jacobi formulation.
 %  % matlab doesn't like for loops... but in real, fast code written in C++
-%  this is the approach to try first.
+%  % this is the approach to try first... probably.
 %  for i = 1:length(x)
 %    x(i) = (1 - omega) * x(i)...
 %	    + omega / D(i,i) * (b(i) - L(i,:) * x - U(i,:) * x);
