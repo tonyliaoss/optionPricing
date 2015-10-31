@@ -2,10 +2,16 @@ clc
 clear all
 
 % set test values...
-E = 105;
-r = 0.02;
-S = 100;
-sigma = 0.2;
+% E = 105;
+% r = 0.02;
+% S = 100;
+% sigma = 0.2;
+% tau = 0.25;
+
+E = 10;
+r = 0.1;
+S = 2;
+sigma = 0.4;
 tau = 0.25;
 
 % print initial conditions to console...
