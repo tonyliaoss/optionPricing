@@ -36,9 +36,24 @@ while norm(xold - x) > epsilon
   % this corresponds to the 'previous' guess
   xold = x;
 
-  % now we update x according to the formula found of Wikipedia :p
+%  % iterate through each component of x... We need to do this with a for loop
+%  % because we want to use updated values as soon as it becomes available.
+%  % i.e. use Gauss-Seidel formulation instead of Jacobi formulation.
+%  % matlab doesn't like for loops... but in real, fast code written in C++
+%  this is the approach to try first.
+%  for i = 1:length(x)
+%    x(i) = (1 - omega) * x(i)...
+%	    + omega / D(i,i) * (b(i) - L(i,:) * x - U(i,:) * x);
+%  end
+
+  % now we update x according to the formula found on Wikipedia :p
+  % This is the Jacobi iteration... where we compute *all* of x for the
+  % iteration k before proceeding to iteration k+1. Theoretically the
+  % Gauss-Seidel formulation should be faster... but I guess Matlab is just
+  % insanely fast with arrays...? :s
   x = (D + omega * L) \ ...
         (omega * b - (omega * U + (omega - 1) * D) * x);
+
   numIter = numIter + 1;
 end
 
