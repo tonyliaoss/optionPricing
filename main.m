@@ -38,6 +38,12 @@ sor_cne = sorCrankNicolsonEuropean(S, tau, E, r, sigma);
 fprintf('    ');
 toc
 
+% Generate table for European options
+methodNamesEuropean = {'Black-Scholes'; 'Explicit'; 'Implicit'; 'Crank-Nicolson'};
+simple = [bse; ee; ie; cne];
+sor = [bse; sor_ee; sor_ie; sor_cne];
+euroTable = table(simple, sor, 'RowNames', methodNamesEuropean)
+
 % evaluate American options...
 fprintf('Evaluating pricing of American options...\n');
 addpath('psor')
@@ -47,12 +53,7 @@ psor_cne = psorCrankNicolsonAmerican(S, tau, E, r, sigma);
 fprintf('    ');
 toc
 
-% Generate tables...
-methodNamesEuropean = {'Black-Scholes'; 'Explicit'; 'Implicit'; 'Crank-Nicolson'};
-simple = [bse; ee; ie; cne];
-sor = [bse; sor_ee; sor_ie; sor_cne];
-euroTable = table(simple, sor, 'RowNames', methodNamesEuropean)
-
+% Generate table for American options
 methodNamesAmerican = {'Implicit'; 'Crank-Nicolson'};
 psor = [psor_ie; psor_cne];
 amerTable = table(psor, 'RowNames', methodNamesAmerican)

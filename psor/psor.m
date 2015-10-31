@@ -1,16 +1,21 @@
-function  [ x ] = psor( A, b, x0 )
-% sor: Solves a system of linear equations using the successive over-relaxation
+function  [ x ] = psor( A, b, x0, g )
+% psor: Solves a system of linear equations using the successive over-relaxation
 % technique. Note that the error tolerance and maximum number of iterations are
 % hard-coded into this function.
-% Solves the linear system Ax = b.
+% Solves the linear complementarity formulation:
+%   1. A * x - b >= 0;
+%   2. x - g >= 0
+%   3. x * g == 0
 %
 %   Detailed explanation goes here
 % INPUT PARAMETERS
-%   A - the input matrix corresponding to a linear transformation in the
-%       equation Ax = b, where x is the unknown.
-%   b - the input column vector corresponding to the right hand side of the
-%       equation Ax = b, where x is the unknown.
+%   A  - the input matrix corresponding to a linear transformation in the
+%        equation Ax = b, where x is the unknown.
+%   b  - the input column vector corresponding to the right hand side of the
+%        equation Ax = b, where x is the unknown.
 %   x0 - the initial "guess" at the vector x.
+%   g  - the "complementary" vector associated with b in the linear
+%        complementarity formulation of American option pricing.
 % OUTPUT PARAMETERS
 %   x - the output column vector corresponding to the unknown vector in the
 %       equation Ax = b.
@@ -31,18 +36,20 @@ epsilon = 1e-8;
 % start with the initial guess.
 x = x0;
 
+old_x = x * 10000;
+
 % r stands for residue. (vector difference between iteration k+1 and k)
 r = b - A * x;
-while norm(r) > epsilon
+while norm(old_x - x) > epsilon
   % this is the matrix formulation of Gauss Seidel method...
   % as inspired by this awesome StackOverflow post:
   % http://stackoverflow.com/questions/20913572/gauss-seidel-method-doesnt-work-for-large-sparse-arrays
 
+  old_x = x;
   % note: changing 'Q' into 'A' results in >2x speedup!
   %dx = Q \ r;
   dx = A \ r;
-
-  x = x + omega * dx;
+  x = max(x + omega * dx, g);
   r = b - A * x;
 end
 

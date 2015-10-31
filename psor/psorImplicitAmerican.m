@@ -1,6 +1,12 @@
 function  [ P ] = psorImplicitAmerican( S, tau, E, r, sigma )
-% ImplicitEuropean: Computes the fair value of the European put option
-% using the implicit Euler method.
+% psorImplicitAmerican: Computes the fair value of the American put option
+% using the implicit Euler method. Uses projected SOR to solve the linear
+% complementarity formulation.
+% Now at each time step, instead of solving the system of equations Ax = b, we
+% need to solve for the linear complementarity problem:
+%     1. A * x - b >= 0
+%     2.     x - g >= 0
+%     3. (x-g) * (A * x - b) = 0
 %   Detailed explanation goes here
 % INPUT PARAMETERS
 %   S - the current market value of the asset.
@@ -42,11 +48,17 @@ T = linspace(0, tau, numPartitionsT + 1);
 
 % initial condition...
 PRICE(1, :) = max(E - S * exp(X), 0);
-
 % boundary value at X = -inf
 PRICE(:, 1) = E * exp(-r * T); % present value of payoff
 % boundary value at X = inf
 PRICE(:, end) = 0;
+
+% compute the "linear complementarity vector", G
+% G is simply the present value of payoff...
+% matlab trick: column vector * row vector
+G = transpose(exp(-r * T)) * max(E - S * exp(X), 0);
+% make the left boundary the same...
+G(:,1) = PRICE(:,1); % TODO not sure about this...
 
 P_boundary = zeros(1, numPartitionsX - 1);
 % populate the solution mesh
@@ -59,7 +71,8 @@ for i = 2:numPartitionsT + 1
     rhs = PRICE_prev - transpose(P_boundary);
     % we want to solve the equation: TRI * P(t = t) = P(t = t - 1) - P_boundary(t = t)
     PRICE(i, 2:numPartitionsX) = ...
-        transpose(sor(TRI, rhs, PRICE_prev));
+        transpose(psor(TRI, rhs, PRICE_prev, ...
+                       transpose(G(i,2:numPartitionsX))));
 end
 
 % interpolate the price at x = 0...

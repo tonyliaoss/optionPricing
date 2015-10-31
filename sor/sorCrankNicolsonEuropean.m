@@ -1,6 +1,7 @@
 function  [ P ] = sorCrankNicolsonEuropean( S, tau, E, r, sigma )
-% CrankNicolsonEuropean: Computes the fair value of the European put option
-% using the Crank-Nicolson implicit finite differences scheme.
+% sorCrankNicolsonEuropean: Computes the fair value of the European put option
+% using the Crank-Nicolson implicit finite differences scheme. Uses SOR to
+% solve the system of linear equations at each time step.
 %   Detailed explanation goes here
 % INPUT PARAMETERS
 %   S - the current market value of the asset.

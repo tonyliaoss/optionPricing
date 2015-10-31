@@ -1,6 +1,7 @@
 function  [ P ] = sorImplicitEuropean( S, tau, E, r, sigma )
-% ImplicitEuropean: Computes the fair value of the European put option
-% using the implicit Euler method.
+% sorImplicitEuropean: Computes the fair value of the European put option
+% using the implicit Euler method. Uses SOR to solve the system of linear
+% equations at each time step.
 %   Detailed explanation goes here
 % INPUT PARAMETERS
 %   S - the current market value of the asset.
