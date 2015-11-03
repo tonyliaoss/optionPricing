@@ -61,16 +61,19 @@ T = linspace(0, tau, numPartitionsT + 1);
 % initial condition...
 PRICE(1, :) = max(E - S * exp(X), 0);
 % boundary value at X = -inf
-PRICE(:, 1) = E * exp(-r * T); % present value of payoff
+% you don't discount the payoff with present value, because you can exercise
+% American options at any time!
+PRICE(:, 1) = E;
 % boundary value at X = inf
 PRICE(:, end) = 0;
 
 % compute the "linear complementarity vector", G
 % G is simply the present value of payoff...
 % matlab trick: column vector * row vector
-G = transpose(exp(-r * T)) * max(E - S * exp(X), 0);
+% again, don't discount payoff by present value.
+G = ones(length(T), 1) * max(E - S * exp(X), 0);
 % make the left boundary the same...
-G(:,1) = PRICE(:,1); % TODO not sure about this...
+G(:,1) = PRICE(:,1); % error from boundary should be negligible
 
 P_boundary = zeros(1, numPartitionsX - 1);
 % populate the solution mesh
