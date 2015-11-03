@@ -1,17 +1,38 @@
-function [ P ] = ExplicitEuropean( S, tau, E, r, sigma )
+function [ P ] = ExplicitEuropean( S, tau, E, r, sigma, varargin )
 % Computes the fair value of the European put option using the explicit
 % finite differences method.
-%   Detailed explanation goes here
 % INPUT PARAMETERS
 %   S - the current market value of the asset.
 %   tau - time to expiry of the option, expressed in years.
 %   E - the strike price, or exercise price, of the option.
 %   r - the risk-free investment return per annum.
 %   sigma - the market volatility.
+%   varargin - optional arguments as explained below.
+% OPTIONAL INPUT (PARAMETER-VALUE PAIRS)
+%   'numPartitionsX', nX - number of partitions in X
+%   'alpha', al          - defined as dt / (dx^2)
 
-alpha = 0.2; % alpha = dt/(dx^2)
-numPartitionsX = 200;
+% default values for optional arguments...
+defaultAlpha = 0.2;
+defaultNumPartitionsX = 200;
 
+% define inputParser to parse optional arguments.
+parser = inputParser;
+parser.addRequired('S', @isnumeric);
+parser.addRequired('tau', @isnumeric);
+parser.addRequired('E', @isnumeric);
+parser.addRequired('r', @isnumeric);
+parser.addRequired('sigma', @isnumeric);
+parser.addParamValue('numPartitionsX', defaultNumPartitionsX, @isnumeric);
+parser.addParamValue('alpha', defaultAlpha, @isnumeric);
+
+% parse input and setting optional values...
+parser.parse(S, tau, E, r, sigma, varargin{:});
+inputs = parser.Results;
+alpha = inputs.alpha; % alpha = dt/(dx^2)
+numPartitionsX = inputs.numPartitionsX;
+
+% determine the maximum and minimum x values.
 z = 5; % variable for random walk
 S_t = S * exp((r - 0.5 * sigma^2) * tau + sigma * sqrt(tau) * z);
 x_max = log(S_t / S);

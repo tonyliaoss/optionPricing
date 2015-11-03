@@ -1,4 +1,4 @@
-function  [ P ] = CrankNicolsonEuropean( S, tau, E, r, sigma )
+function  [ P ] = CrankNicolsonEuropean( S, tau, E, r, sigma, varargin )
 % CrankNicolsonEuropean: Computes the fair value of the European put option
 % using the Crank-Nicolson implicit finite differences scheme.
 %   Detailed explanation goes here
@@ -8,8 +8,30 @@ function  [ P ] = CrankNicolsonEuropean( S, tau, E, r, sigma )
 %   E - the strike price, or exercise price, of the option.
 %   r - the risk-free investment return per annum.
 %   sigma - the market volatility.
-numPartitionsX = 2000;
-numPartitionsT = 2000;
+%   varargin - optional arguments as explained below.
+% OPTIONAL INPUT (PARAMETER-VALUE PAIRS)
+%   'numPartitionsX', nX - number of partitions in X
+%   'numPartitionsT', nT - number of partitions in T
+
+% default values for optional arguments...
+defaultNumPartitionsX = 2000;
+defaultNumPartitionsT = 2000;
+
+% define inputParser to parse optional arguments.
+parser = inputParser;
+parser.addRequired('S', @isnumeric);
+parser.addRequired('tau', @isnumeric);
+parser.addRequired('E', @isnumeric);
+parser.addRequired('r', @isnumeric);
+parser.addRequired('sigma', @isnumeric);
+parser.addParamValue('numPartitionsX', defaultNumPartitionsX, @isnumeric);
+parser.addParamValue('numPartitionsT', defaultNumPartitionsT, @isnumeric);
+
+% parse input and setting optional values...
+parser.parse(S, tau, E, r, sigma, varargin{:});
+inputs = parser.Results;
+numPartitionsX = inputs.numPartitionsX;
+numPartitionsT = inputs.numPartitionsT;
 
 % determine the maximum and minimum x values.
 z = 5; % variable for random walk
