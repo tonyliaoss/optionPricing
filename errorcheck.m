@@ -8,56 +8,164 @@ S = 14;
 sigma = 0.4;
 tau = 0.25;
 
+% sweep through asset prices to get a plot of convergence rates...
 addpath('simple');
+% explicit
+asset_prices = [];
+error_ratios = [];
+figure
+for S=0:2:14
+  coarse = ExplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 200);
+  coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
+  fine = ExplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 400);
+  fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine;
+  error_ratio = coarse_err/fine_err;
+
+  asset_prices = [asset_prices S];
+  error_ratios = [error_ratios error_ratio];
+end
+scatter(asset_prices, error_ratios);
+a = error_ratios';
+b = num2str(a);
+c = cellstr(b);
+dx = 0.1; dy = 0.1;
+text(asset_prices + dx, error_ratios + dy, c);
+title('Error ratios as a function of initial asset prices (Explicit European).');
+xlabel('Initial asset price');
+ylabel('Error ratio');
+
 % implicit
-coarse = ImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
-	  'numPartitionsT', 1000);
-coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse
+asset_prices = [];
+error_ratios = [];
+figure
+for S=0:2:14
+  coarse = ImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
+  	  'numPartitionsT', 1000);
+  coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
+  fine = ImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 2000, ...
+  	  'numPartitionsT', 4000);
+  fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine;
+  error_ratio = coarse_err/fine_err;
 
-fine = ImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 2000, ...
-	  'numPartitionsT', 4000);
-fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine
-error_ratio = coarse_err/fine_err
-fprintf('%f\n%f %f\n',BSEqnEuropean(S, tau, E, r, sigma), coarse, fine);
+  asset_prices = [asset_prices S];
+  error_ratios = [error_ratios error_ratio];
+end
+scatter(asset_prices, error_ratios);
+a = error_ratios';
+b = num2str(a);
+c = cellstr(b);
+dx = 0.1; dy = 0.1;
+text(asset_prices + dx, error_ratios + dy, c);
+title('Error ratios as a function of initial asset prices (Implicit European).');
+xlabel('Initial asset price');
+ylabel('Error ratio');
 
-% fine = ImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
-% 	  'numPartitionsT', 4000);
-% fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine
-% error_ratio = coarse_err/fine_err
+% crank-nicolson
+asset_prices = [];
+error_ratios = [];
+figure
+for S=0:2:14
+  coarse = CrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
+  	  'numPartitionsT', 1000);
+  coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
+  fine = CrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 2000, ...
+  	  'numPartitionsT', 4000);
+  fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine;
+  error_ratio = coarse_err/fine_err;
 
-% Crank-Nicolson
-coarse = CrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
-	  'numPartitionsT', 1000);
-coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse
+  asset_prices = [asset_prices S];
+  error_ratios = [error_ratios error_ratio];
+end
+scatter(asset_prices, error_ratios);
+a = error_ratios';
+b = num2str(a);
+c = cellstr(b);
+dx = 0.1; dy = 0.1;
+text(asset_prices + dx, error_ratios + dy, c);
+title('Error ratios as a function of initial asset prices (Crank-Nicolson European).');
+xlabel('Initial asset price');
+ylabel('Error ratio');
 
-fine = CrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 2000, ...
-	  'numPartitionsT', 2000);
-fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine
+% set test values...
+E = 10;
+r = 0.1;
+S = 14;
+sigma = 0.4;
+tau = 0.25;
 
-error_ratio = coarse_err/fine_err
+% explicit
+strike_prices = [];
+error_ratios = [];
+figure
+for E=0:2:14
+  coarse = ExplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 200);
+  coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
+  fine = ExplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 400);
+  fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine;
+  error_ratio = coarse_err/fine_err;
 
-return
+  strike_prices = [strike_prices E];
+  error_ratios = [error_ratios error_ratio];
+end
+scatter(strike_prices, error_ratios);
+a = error_ratios';
+b = num2str(a);
+c = cellstr(b);
+dx = 0.1; dy = 0.1;
+text(asset_prices + dx, error_ratios + dy, c);
+title('Error ratios as a function of strike prices (Explicit European).');
+xlabel('Initial asset price');
+ylabel('Error ratio');
 
-% addpath('sor');
-% % implicit
-% coarse = sorImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
-% 	  'numPartitionsT', 1000);
-% coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse
-%
-% fine = sorImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 2000, ...
-% 	  'numPartitionsT', 2000);
-% fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine
-%
-% error_ratio = coarse_err/fine_err
-%
-% % Crank-Nicolson
-% coarse = sorCrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
-% 	  'numPartitionsT', 1000);
-% coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse
-%
-% fine = sorCrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 2000, ...
-% 	  'numPartitionsT', 2000);
-% fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine
-%
-% error_ratio = coarse_err/fine_err
-%
+% crank-nicolson
+strike_prices = [];
+error_ratios = [];
+figure
+for E=0:2:14
+  coarse = ImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
+  	  'numPartitionsT', 1000);
+  coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
+  fine = ImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 2000, ...
+  	  'numPartitionsT', 4000);
+  fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine;
+  error_ratio = coarse_err/fine_err;
+
+  strike_prices = [strike_prices E];
+  error_ratios = [error_ratios error_ratio];
+end
+scatter(strike_prices, error_ratios);
+a = error_ratios';
+b = num2str(a);
+c = cellstr(b);
+dx = 0.1; dy = 0.1;
+text(asset_prices + dx, error_ratios + dy, c);
+title('Error ratios as a function of strike prices (Implicit European).');
+xlabel('Initial asset price');
+ylabel('Error ratio');
+
+% crank-nicolson
+strike_prices = [];
+error_ratios = [];
+figure
+for E=0:2:14
+  coarse = CrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
+  	  'numPartitionsT', 1000);
+  coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
+  fine = CrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 2000, ...
+  	  'numPartitionsT', 4000);
+  fine_err = BSEqnEuropean(S, tau, E, r, sigma) - fine;
+  error_ratio = coarse_err/fine_err;
+
+  strike_prices = [strike_prices E];
+  error_ratios = [error_ratios error_ratio];
+end
+scatter(strike_prices, error_ratios);
+a = error_ratios';
+b = num2str(a);
+c = cellstr(b);
+dx = 0.1; dy = 0.1;
+text(asset_prices + dx, error_ratios + dy, c);
+title('Error ratios as a function of strike prices (Crank-Nicolson European).');
+xlabel('Initial asset price');
+ylabel('Error ratio');
+
