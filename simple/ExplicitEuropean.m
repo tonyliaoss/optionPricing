@@ -35,8 +35,13 @@ numPartitionsX = inputs.numPartitionsX;
 % determine the maximum and minimum x values.
 z = 5; % variable for random walk
 S_t = S * exp((r - 0.5 * sigma^2) * tau + sigma * sqrt(tau) * z);
-x_max = log(S_t / S);
-x_min = -x_max;
+if S == 0
+  x_max = 2 * E;
+  x_min = -2 * E;
+else
+  x_max = log(S_t / S);
+  x_min = -x_max;
+end
 
 dx = (x_max - x_min) / numPartitionsX;
 dt = alpha * dx^2;
