@@ -39,7 +39,7 @@ if S == 0
   x_max = 2 * E;
   x_min = -2 * E;
 else
-  x_max = log(S_t / S);
+  x_max = log(S_t / S)
   x_min = -x_max;
 end
 
