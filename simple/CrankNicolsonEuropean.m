@@ -48,6 +48,20 @@ end
 dt = tau / numPartitionsT;
 dx = (x_max - x_min) / numPartitionsX;
 
+%% compute coefficients iA, iB, and iC.
+%iA_scalar = (((r - 0.5 * sigma ^ 2) * dt) / (2 * dx) - sigma ^ 2 * dt / (2 * dx ^ 2));
+%iA = ones(numPartitionsX - 1, 1);
+%iA = iA * iA_scalar;
+%iB_scalar = (sigma ^ 2 * dt / (dx ^ 2) + r * dt + 1);
+%iB = ones(numPartitionsX - 1, 1);
+%iB = iB * iB_scalar;
+%iC_scalar = (-((r - 0.5 * sigma ^ 2) * dt) / (2 * dx) - (sigma ^ 2 * dt) / (2 * dx ^ 2));
+%iC = ones(numPartitionsX - 1, 1);
+%iC = iC * iC_scalar;
+%
+%% generate a tri-diagonal matrix TRI, of size numPartitionsX - 1.
+%TRI = spdiags([iA, iB, iC], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
+
 % compute coefficients A, B, C, D, E, and F.
 A_scalar = ((r - 0.5 * sigma ^ 2) * dt / (4 * dx) - sigma ^ 2 * dt / (4 * dx ^ 2));
 A = ones(numPartitionsX - 1, 1);
@@ -88,6 +102,19 @@ PRICE(:, 1) = E * exp(-r * T); % present value of payoff
 PRICE(:, end) = 0;
 
 P_boundary = zeros(1, numPartitionsX - 1);
+%% run the first few iterations as Implicit for convergence check
+%for i = 2:10
+%    P_boundary(1) = iA_scalar * PRICE(i, 1);
+%    P_boundary(end) = iC_scalar * PRICE(i, end);
+%
+%    % we want to solve the equation: TRI * P(t = t) = P(t = t - 1) + P_boundary(t = t)
+%    PRICE(i, 2:numPartitionsX) = ...
+%        transpose(TRI \ ...
+%                    transpose(PRICE(i-1, 2:numPartitionsX) ...
+%                              - P_boundary) ...
+%                 );
+%end
+
 % populate the solution mesh
 for i = 2:numPartitionsT + 1
     P_boundary(1) = A_scalar * PRICE(i, 1);

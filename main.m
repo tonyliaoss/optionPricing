@@ -1,4 +1,4 @@
-clc
+%clc
 clear all
 
 % % set test values...

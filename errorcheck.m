@@ -14,7 +14,7 @@ addpath('simple');
 asset_prices = [];
 error_ratios = [];
 figure
-for S=0:2:14
+for S=8:0.25:12
   coarse = ExplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 200);
   coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
   fine = ExplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 400);
@@ -38,7 +38,7 @@ ylabel('Error ratio');
 asset_prices = [];
 error_ratios = [];
 figure
-for S=0:2:14
+for S=8:0.25:12
   coarse = ImplicitEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
   	  'numPartitionsT', 1000);
   coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
@@ -64,7 +64,7 @@ ylabel('Error ratio');
 asset_prices = [];
 error_ratios = [];
 figure
-for S=0:2:14
+for S=8:0.25:12
   coarse = CrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 1000, ...
   	  'numPartitionsT', 1000);
   coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;
@@ -92,6 +92,8 @@ r = 0.1;
 S = 14;
 sigma = 0.4;
 tau = 0.25;
+
+return % stop here
 
 % explicit
 strike_prices = [];
