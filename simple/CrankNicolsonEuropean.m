@@ -103,7 +103,7 @@ PRICE(:, end) = 0;
 
 P_boundary = zeros(1, numPartitionsX - 1);
 %% run the first few iterations as Implicit for convergence check
-%for i = 2:10
+%for i = 2:numPartitionsT + 1
 %    P_boundary(1) = iA_scalar * PRICE(i, 1);
 %    P_boundary(end) = iC_scalar * PRICE(i, end);
 %
