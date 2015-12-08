@@ -48,28 +48,32 @@ end
 dt = tau / numPartitionsT;
 dx = (x_max - x_min) / numPartitionsX;
 
-%% compute coefficients iA, iB, and iC.
-%iA_scalar = (((r - 0.5 * sigma ^ 2) * dt) / (2 * dx) - sigma ^ 2 * dt / (2 * dx ^ 2));
-%iA = ones(numPartitionsX - 1, 1);
-%iA = iA * iA_scalar;
-%iB_scalar = (sigma ^ 2 * dt / (dx ^ 2) + r * dt + 1);
-%iB = ones(numPartitionsX - 1, 1);
-%iB = iB * iB_scalar;
-%iC_scalar = (-((r - 0.5 * sigma ^ 2) * dt) / (2 * dx) - (sigma ^ 2 * dt) / (2 * dx ^ 2));
-%iC = ones(numPartitionsX - 1, 1);
-%iC = iC * iC_scalar;
-%
-%% generate a tri-diagonal matrix TRI, of size numPartitionsX - 1.
-%TRI = spdiags([iA, iB, iC], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
+%% the following coefficients are copied directly from the "Implicit method"
+% compute coefficients iA, iB, and iC.
+iA_scalar = (((r - 0.5 * sigma ^ 2) * dt) / (2 * dx) - sigma ^ 2 * dt / (2 * dx ^ 2));
+iA = ones(numPartitionsX - 1, 1);
+iA = iA * iA_scalar;
+iB_scalar = (sigma ^ 2 * dt / (dx ^ 2) + r * dt + 1);
+iB = ones(numPartitionsX - 1, 1);
+iB = iB * iB_scalar;
+iC_scalar = (-((r - 0.5 * sigma ^ 2) * dt) / (2 * dx) - (sigma ^ 2 * dt) / (2 * dx ^ 2));
+iC = ones(numPartitionsX - 1, 1);
+iC = iC * iC_scalar;
 
+% generate a tri-diagonal matrix TRI, of size numPartitionsX - 1.
+TRI = spdiags([iA, iB, iC], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
+
+%% the following coefficients are for Crank-Nicolson
 % compute coefficients A, B, C, D, E, and F.
-A_scalar = ((r - 0.5 * sigma ^ 2) * dt / (4 * dx) - sigma ^ 2 * dt / (4 * dx ^ 2));
+% A_scalar = ((r - 0.5 * sigma ^ 2) * dt / (4 * dx) - sigma ^ 2 * dt / (4 * dx ^ 2));
+A_scalar = 0.5 * iA_scalar;
 A = ones(numPartitionsX - 1, 1);
 A = A * A_scalar;
 B_scalar = (0.5 * sigma ^ 2 * dt / dx ^ 2 + 0.5 * r * dt + 1);
 B = ones(numPartitionsX - 1, 1);
 B = B * B_scalar;
-C_scalar = (-((r - 0.5 * sigma ^ 2) * dt) / (4 * dx) - (sigma ^ 2 * dt) / (4 * dx ^ 2));
+% C_scalar = (-((r - 0.5 * sigma ^ 2) * dt) / (4 * dx) - (sigma ^ 2 * dt) / (4 * dx ^ 2));
+C_scalar = 0.5 * iC_scalar;
 C = ones(numPartitionsX - 1, 1);
 C = C * C_scalar;
 alpha_scalar = - A_scalar;

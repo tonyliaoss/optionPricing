@@ -1,4 +1,4 @@
-function [ output_args ] = BiTreeEuropean( S, tau, E, r, sigma, varargin )
+function [ P ] = BiTreeEuropean( S, tau, E, r, sigma, varargin )
 % BiTreeEuropean: Computes the fair value of the European put option
 % using the binomial tree method
 % INPUT PARAMETERS
@@ -12,7 +12,7 @@ function [ output_args ] = BiTreeEuropean( S, tau, E, r, sigma, varargin )
 %   'numPartitionsT', nT - number of partitions in T
 
 % default values for optional arguments...
-defaultNumPartitionsT = 128; % days in a year
+defaultNumPartitionsT = 128;
 
 % define inputParser to parse optional arguments.
 parser = inputParser;
@@ -36,7 +36,9 @@ dt = tau / numPartitionsT;
 a = exp(r * sqrt(dt));
 p = (a - d) / (u - d); % "probability" of up move
 
-% todo
+% how to build a tree? We initialize a vector of length 1, and gradually add to
+% it...
+Tree = S; % initialization
 
 end
 
