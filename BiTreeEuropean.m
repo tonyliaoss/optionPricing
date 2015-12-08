@@ -12,7 +12,7 @@ function [ P ] = BiTreeEuropean( S, tau, E, r, sigma, varargin )
 %   'numPartitionsT', nT - number of partitions in T
 
 % default values for optional arguments...
-defaultNumPartitionsT = 128;
+defaultNumPartitionsT = 256;
 
 % define inputParser to parse optional arguments.
 parser = inputParser;
@@ -28,17 +28,42 @@ parser.parse(S, tau, E, r, sigma, varargin{:});
 inputs = parser.Results;
 numPartitionsT = inputs.numPartitionsT;
 
-% binomial parameters... (from Prentice Hall)
-u = exp(sigma * sqrt(tau)); % proprotion of increase for moving up
-d = 1 / u; % proportion of decrease for moving down
-
+%%%% binomial parameters...
 dt = tau / numPartitionsT;
-a = exp(r * sqrt(dt));
+%% alternate way to set up the parameters.
+% A = 0.5 * (exp(-r* dt) + exp((r + sigma ^ 2) * dt));
+%
+% u = A + sqrt(A^2 - 1)
+% d = 1/u
+u = exp(sigma * sqrt(dt))
+d = 1/u
+a = exp(r * dt);
 p = (a - d) / (u - d); % "probability" of up move
 
 % how to build a tree? We initialize a vector of length 1, and gradually add to
 % it...
 Tree = S; % initialization
+
+for i = 1:numPartitionsT
+  mult = [u*ones(1,i) d];
+  Tree = [Tree Tree(i)];
+
+  Tree = Tree .* mult;
+end
+Tree = Tree'; % make sure Tree is column
+
+Tree = max(E - Tree, 0); % option value at expiration date.
+
+% backpropagation matrix
+B = spdiags([p*ones(numPartitionsT+1, 1), (1-p)*ones(numPartitionsT+1, 1)], ...
+    [0, 1], zeros(numPartitionsT+1, numPartitionsT+1));
+
+for i = numPartitionsT:-1:1
+  B(1:i, 1:i+1);
+  Tree = B(1:i, 1:i+1) * Tree;
+end
+
+P = exp(-r * tau) * Tree;
 
 end
 

@@ -48,7 +48,7 @@ end
 dt = tau / numPartitionsT;
 dx = (x_max - x_min) / numPartitionsX;
 
-%% the following coefficients are copied directly from the "Implicit method"
+%%%%%%%%% the following coefficients are copied directly from the "Implicit method"
 % compute coefficients iA, iB, and iC.
 iA_scalar = (((r - 0.5 * sigma ^ 2) * dt) / (2 * dx) - sigma ^ 2 * dt / (2 * dx ^ 2));
 iA = ones(numPartitionsX - 1, 1);
@@ -63,7 +63,7 @@ iC = iC * iC_scalar;
 % generate a tri-diagonal matrix TRI, of size numPartitionsX - 1.
 TRI = spdiags([iA, iB, iC], [-1, 0, 1], numPartitionsX - 1, numPartitionsX - 1);
 
-%% the following coefficients are for Crank-Nicolson
+%%%%%%%% the following coefficients are for Crank-Nicolson
 % compute coefficients A, B, C, D, E, and F.
 % A_scalar = ((r - 0.5 * sigma ^ 2) * dt / (4 * dx) - sigma ^ 2 * dt / (4 * dx ^ 2));
 A_scalar = 0.5 * iA_scalar;
