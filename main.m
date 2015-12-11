@@ -1,15 +1,14 @@
-%clc
+clc
 clear all
 
 % set test values...
-% European value should be 6.6995, American should be 6.7780
 E = 105;
 r = 0.02;
 S = 100;
 sigma = 0.2;
 tau = 79 / 365;
 
-% % textbook values... easy for comparison.
+% % textbook values... for easy comparison.
 % % European value should be 7.7531, American should be 8.0000
 % E = 10;
 % r = 0.1;
@@ -66,4 +65,17 @@ toc
 methodNamesAmerican = {'Implicit'; 'Crank-Nicolson'};
 psor = [psor_ie; psor_cne];
 amerTable = table(psor, 'RowNames', methodNamesAmerican)
+
+% Using binomial trees for American and European options...
+fprintf('  Using tree-based methods...\n');
+addpath('tree');
+tic
+bitree_e = BiTreeEuropean(S, tau, E, r, sigma);
+fprintf('    ');
+toc
+
+% Generate table for tree-based methods
+methodNamesTree = {'Binomial Tree (European)'};
+tree = [bitree_e];
+treeTable = table(tree, 'RowNames', methodNamesTree)
 
