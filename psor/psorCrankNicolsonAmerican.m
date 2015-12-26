@@ -104,8 +104,8 @@ G(:,1) = PRICE(:,1); % error from boundary should be negligible
 P_boundary = zeros(1, numPartitionsX - 1);
 % populate the solution mesh
 for i = 2:numPartitionsT + 1
-    P_boundary(1) = A_scalar * PRICE(i, 1);
-    P_boundary(end) = C_scalar * PRICE(i, end);
+    P_boundary(1) = 0.5 * (A_scalar + alpha_scalar) * PRICE(i, 1);
+    P_boundary(end) = 0.5 * (C_scalar + gamma_scalar) * PRICE(i, end);
 
     PRICE_prev = transpose(PRICE(i-1, 2:numPartitionsX));
     % this is the 'right hand side' of the system of linear equation that we

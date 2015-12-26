@@ -34,11 +34,11 @@ dt = tau / numPartitionsT;
 %% alternate way to set up the parameters.
 % A = 0.5 * (exp(-r* dt) + exp((r + sigma ^ 2) * dt));
 %
-% u = A + sqrt(A^2 - 1)
-% d = 1/u
+% u = A + sqrt(A^2 - 1);
+% d = 1/u;
 
-u = exp(sigma * sqrt(dt))
-d = 1/u
+u = exp(sigma * sqrt(dt));
+d = 1/u;
 a = exp(r * dt);
 p = (a - d) / (u - d); % "probability" of up move
 

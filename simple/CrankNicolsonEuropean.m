@@ -121,8 +121,8 @@ P_boundary = zeros(1, numPartitionsX - 1);
 
 % populate the solution mesh
 for i = 2:numPartitionsT + 1
-    P_boundary(1) = A_scalar * PRICE(i, 1);
-    P_boundary(end) = C_scalar * PRICE(i, end);
+    P_boundary(1) = 0.5 * (A_scalar + alpha_scalar) * PRICE(i, 1);
+    P_boundary(end) = 0.5 * (C_scalar + gamma_scalar) * PRICE(i, end);
     % we want to solve the equation: TRI_t * P(t = t) := TRI_tprev * P(t = t - 1) + P_boundary(t = t)
     PRICE(i, 2:numPartitionsX) = ...
         transpose(TRI_t \ ...
