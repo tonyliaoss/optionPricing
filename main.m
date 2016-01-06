@@ -67,15 +67,22 @@ psor = [psor_ie; psor_cne];
 amerTable = table(psor, 'RowNames', methodNamesAmerican)
 
 % Using binomial trees for American and European options...
-fprintf('  Using tree-based methods...\n');
+fprintf('Evalutaing option pricing using tree-based methods...\n');
 addpath('tree');
+fprintf('  Evaluating european options...');
 tic
 bitree_e = BiTreeEuropean(S, tau, E, r, sigma);
 fprintf('    ');
 toc
 
+fprintf('  Evaluating american options...');
+tic
+bitree_a = BiTreeAmerican(S, tau, E, r, sigma);
+fprintf('    ');
+toc
+
 % Generate table for tree-based methods
-methodNamesTree = {'Binomial Tree (European)'};
-tree = [bitree_e];
+methodNamesTree = {'Binomial Tree (European)'; 'Binomial Tree (American)'};
+tree = [bitree_e; bitree_a];
 treeTable = table(tree, 'RowNames', methodNamesTree)
 

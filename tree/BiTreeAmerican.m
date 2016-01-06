@@ -1,5 +1,5 @@
-function [ P ] = BiTreeEuropean( S, tau, E, r, sigma, varargin )
-% BiTreeEuropean: Computes the fair value of the European put option
+function [ P ] = BiTreeAmerican( S, tau, E, r, sigma, varargin )
+% BiTreeAmerican: Computes the fair value of the American put option
 % using the binomial tree method
 % INPUT PARAMETERS
 %   S - the current market value of the asset.
@@ -44,28 +44,36 @@ p = (a - d) / (u - d); % "probability" of up move
 
 % how to build a tree? We initialize a vector of length 1, and gradually add to
 % it...
-Tree = S; % initialization
+% unlike pricing European options, we need to keep track of the tree.
+Tree = zeros(numPartitionsT+1, numPartitionsT+1);
+Tree(1, 1) = S; % initialization
 
 for i = 1:numPartitionsT
   mult = [u*ones(1,i) d]; % [u u ... u d]
-  Tree = [Tree Tree(i)];
+  Tree(i+1, 1:i+1) = [Tree(i,1:i) Tree(i,i)];
 
-  Tree = Tree .* mult;
+  Tree(i+1, 1:i+1) = Tree(i+1, 1:i+1) .* mult;
 end
-Tree = Tree'; % make sure Tree is column
+Tree = Tree'; % Tree row: numIter, Tree column: column vector of prices
 
-Tree = max(E - Tree, 0); % option value at expiration date.
+% initialize option values at maturity
+Price = max(E - Tree(:, end), 0);
 
 % backpropagation matrix
 B = spdiags([p*ones(numPartitionsT+1, 1), (1-p)*ones(numPartitionsT+1, 1)], ...
     [0, 1], zeros(numPartitionsT+1, numPartitionsT+1));
 
+iTree = Price(:, end);
+% with american options we need to keep track of two matrices... One for asset
+% price and one for option price.
 for i = numPartitionsT:-1:1
-  % B(1:i, 1:i+1) : if current tree has length n, this matrix will be n-1 by n.
-  Tree = B(1:i, 1:i+1) * Tree; % this multiplication magically shrinks the tree
+  iTree = B(1:i, 1:i+1) * iTree; % the length of iTree shrinks with every iter
+  Price = max(max(E - Tree(1:i, i), 0), iTree * exp(-r * dt));
+  iTree = Price;
 end
 
-P = exp(-r * tau) * Tree;
+Price;
+P = Price;
 
 end
 
