@@ -63,13 +63,14 @@ Price = max(E - Tree(:, end), 0);
 B = spdiags([p*ones(numPartitionsT+1, 1), (1-p)*ones(numPartitionsT+1, 1)], ...
     [0, 1], zeros(numPartitionsT+1, numPartitionsT+1));
 
+% the "tree for this iteration"
 iTree = Price(:, end);
 % with american options we need to keep track of two matrices... One for asset
 % price and one for option price.
 for i = numPartitionsT:-1:1
   iTree = B(1:i, 1:i+1) * iTree; % the length of iTree shrinks with every iter
   Price = max(max(E - Tree(1:i, i), 0), iTree * exp(-r * dt));
-  iTree = Price;
+  iTree = Price; % need to propagate this updated price forward.
 end
 
 Price;
