@@ -45,6 +45,9 @@ p = (a - d) / (u - d); % "probability" of up move
 % how to build a tree? We initialize a vector of length 1, and gradually add to
 % it...
 % unlike pricing European options, we need to keep track of the tree.
+
+% initilize a square matrix for Tree. its upper triangular component will
+% contain asset prices for each binomial expansion.
 Tree = zeros(numPartitionsT+1, numPartitionsT+1);
 Tree(1, 1) = S; % initialization
 
@@ -69,11 +72,10 @@ iTree = Price(:, end);
 % price and one for option price.
 for i = numPartitionsT:-1:1
   iTree = B(1:i, 1:i+1) * iTree; % the length of iTree shrinks with every iter
-  Price = max(max(E - Tree(1:i, i), 0), iTree * exp(-r * dt));
+  Price = max(max(E - Tree(1:i, i), 0), iTree * exp(-r * dt)); % early exercise
   iTree = Price; % need to propagate this updated price forward.
 end
 
-Price;
 P = Price;
 
 end

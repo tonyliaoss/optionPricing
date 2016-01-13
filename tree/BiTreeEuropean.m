@@ -65,7 +65,7 @@ for i = numPartitionsT:-1:1
   Tree = B(1:i, 1:i+1) * Tree; % this multiplication magically shrinks the tree
 end
 
-P = exp(-r * tau) * Tree;
+P = exp(-r * tau) * Tree; % discount by present value.
 
 end
 
