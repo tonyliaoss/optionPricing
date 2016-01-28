@@ -23,7 +23,7 @@ function  [ P ] = penaltyImplicitAmerican( S, tau, E, r, sigma, varargin )
 % default values for optional arguments...
 defaultNumPartitionsX = 2000;
 defaultNumPartitionsT = 2000;
-defaultZeta = 1e8; % zeta is the penalty parameter.
+defaultZeta = 1e6; % zeta is the penalty parameter.
 
 % define inputParser to parse optional arguments.
 parser = inputParser;

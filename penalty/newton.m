@@ -15,7 +15,8 @@ old_P = P * 10000;
 %%P
 %size(P)
 
-zeta_func = @(G, P) (G > P) * zeta;
+% zeta_func = @(G, P) (G > P) * zeta;
+[R C] = size(TRI);
 
 while norm(old_P - P) > epsilon
   old_P = P;
@@ -23,8 +24,9 @@ while norm(old_P - P) > epsilon
 
 %  P = (TRI + diag(zeta_vec)) \ (P0 + zeta_vec .* G);
 
-  F = (TRI + diag(zeta_vec)) * P - (P0 + zeta_vec .* G);
-  F_jac = TRI + diag(zeta_vec); % - diag(G .* zeta_vec); % diff(zeta) = -zeta
+  zeta_diag = spdiags(zeta_vec, [0], R, C);
+  F = (TRI + zeta_diag) * P - (P0 + zeta_vec .* G);
+  F_jac = TRI + zeta_diag; % - diag(G .* zeta_vec); % diff(zeta) = -zeta
 
   P = P - F_jac \ F;
 %  norm(old_P - P)

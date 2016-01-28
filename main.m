@@ -1,20 +1,20 @@
 clc
 clear all
 
-% % set test values...
-% E = 105;
-% r = 0.02;
-% S = 100;
-% sigma = 0.2;
-% tau = 79 / 365;
+% set test values...
+E = 105;
+r = 0.02;
+S = 100;
+sigma = 0.2;
+tau = 79 / 365;
 
-% textbook values... for easy comparison.
-% European value should be 7.7531, American should be 8.0000
-E = 10;
-r = 0.1;
-S = 0;
-sigma = 0.4;
-tau = 0.25;
+% % textbook values... for easy comparison.
+% % European value should be 7.7531, American should be 8.0000
+% E = 10;
+% r = 0.1;
+% S = 0;
+% sigma = 0.4;
+% tau = 0.25;
 
 % print initial conditions to console...
 formatString = ['Asset price = %.2f, Strike price = %.2f,' ...
