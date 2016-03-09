@@ -64,7 +64,7 @@ addpath('simple');
 asset_prices = [];
 error_ratios = [];
 hold on
-for S=100:0.2:110
+for S=100:1:110
   coarse = CrankNicolsonEuropean(S, tau, E, r, sigma, 'numPartitionsX', 500, ...
   	  'numPartitionsT', 500);
   coarse_err = BSEqnEuropean(S, tau, E, r, sigma) - coarse;

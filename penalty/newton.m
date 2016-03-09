@@ -16,7 +16,7 @@ old_P = P * 10000;
 %size(P)
 
 % zeta_func = @(G, P) (G > P) * zeta;
-[R C] = size(TRI);
+[R C] = size(TRI); % get the row and column count for TRI.
 
 while norm(old_P - P) > epsilon
   old_P = P;
@@ -25,7 +25,7 @@ while norm(old_P - P) > epsilon
 %  P = (TRI + diag(zeta_vec)) \ (P0 + zeta_vec .* G);
 
   zeta_diag = spdiags(zeta_vec, [0], R, C);
-  F = (TRI + zeta_diag) * P - (P0 + zeta_vec .* G);
+  F = (TRI + zeta_diag) * P - (rhs + zeta_vec .* G);
   F_jac = TRI + zeta_diag; % - diag(G .* zeta_vec); % diff(zeta) = -zeta
 
   P = P - F_jac \ F;
