@@ -24,8 +24,7 @@ defaultN = 2000; % number of sample paths.
 defaultNumPartitionsT = 2000; % number of observation dates.
 defaultZeta = 1e6; % zeta is the penalty parameter.
 
-% ballpark: we need to draw (N * numPartitionsT) normally distributed random
-% numbers.
+% generate N paths and store them all. and then run the regression.
 
 end
 
