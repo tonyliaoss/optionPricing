@@ -24,6 +24,9 @@ function [ S ] = simulateBrownian( S0, mu, sigma, dt, nsteps, nsims )
 % Author: Phil Goddard (phil@goddardconsulting.ca)
 % Date: Q2, 2006
 
+% Modified by Dazhi Liao (t.liao@mail.utoronto.ca)
+% on March 15, 2016.
+
 % calculate the drift
 nu = mu - sigma * sigma/2;
 
@@ -31,8 +34,9 @@ nu = mu - sigma * sigma/2;
 % S = S0 * [ones(1, nsims); ...
 %           cumprod(exp(nu * dt + sigma * sqrt(dt) * randn(nsteps, nsims)), 1)];
 
-S = S0 * [ones(1, nsims); ...
-          exp(cumsum(nu * dt + sigma * sqrt(dt) * randn(nsteps, nsims)))];
+% transpose is what I want
+S = transpose(S0 * [ones(1, nsims); ...
+              exp(cumsum(nu * dt + sigma * sqrt(dt) * randn(nsteps, nsims)))]);
 
 % ^^ I think these are interchangeable.
 
