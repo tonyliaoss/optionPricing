@@ -12,7 +12,7 @@ clear all
 % European value should be 7.7531, American should be 8.0000
 E = 10;
 r = 0.1;
-S = 0;
+S = 2;
 sigma = 0.4;
 tau = 0.25;
 
@@ -79,18 +79,17 @@ amerTable = table(psor, penalty, 'RowNames', methodNamesAmerican)
 fprintf('Evaluating pricing of American options using Monte-Carlo method (1st try)...\n');
 addpath('montecarlo');
 tic
-montecarlo1 = montecarloAmerican(S, tau, E, r, sigma)
+montecarlo1 = montecarloAmerican(S, tau, E, r, sigma);
 toc
 fprintf('Evaluating pricing of American options using Monte-Carlo method (2nd try)...\n');
 tic
-montecarlo2 = montecarloAmerican(S, tau, E, r, sigma)
+montecarlo2 = montecarloAmerican(S, tau, E, r, sigma);
 toc
 
 % Generate table for Monte-Carlo methods
 methodNamesMonteCarlo = {'Try 1'; 'Try 2'};
 montecarlo = [montecarlo1; montecarlo2];
 mcTable = table(montecarlo, 'RowNames', methodNamesMonteCarlo)
-
 
 
 % Using binomial trees for American and European options...
