@@ -19,8 +19,8 @@ function  [ P ] = penaltyCrankNicolsonAmerican( S, tau, E, r, sigma, varargin )
 %   'numPartitionsT', nT - number of partitions in T
 
 % default values for optional arguments...
-defaultNumPartitionsX = 2000;
-defaultNumPartitionsT = 2000;
+defaultNumPartitionsX = 500;
+defaultNumPartitionsT = 500;
 defaultZeta = 1e6; % zeta is the penalty parameter.
 
 % define inputParser to parse optional arguments.

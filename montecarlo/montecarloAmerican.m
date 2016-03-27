@@ -13,8 +13,8 @@ function [ P ] = montecarloAmerican( S, tau, E, r, sigma , varargin )
 % e.g. number = 2 and type = polynomial -> least squares.
 
 % default values for optional arguments...
-defaultN = 4000; % number of sample paths.
-defaultNumPartitionsT = 2500; % number of observation dates.
+defaultN = 50000; % number of sample paths.
+defaultNumPartitionsT = 3000; % number of observation dates.
 
 % define inputParser to parse optional arguments.
 parser = inputParser;
