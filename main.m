@@ -75,21 +75,21 @@ psor = [psor_ie; psor_cne];
 penalty = [penalty_ie; penalty_cne];
 amerTable = table(psor, penalty, 'RowNames', methodNamesAmerican)
 
-% Using Monte-Carlo Methods
-fprintf('Evaluating pricing of American options using Monte-Carlo method (1st try)...\n');
-addpath('montecarlo');
-tic
-montecarlo1 = montecarloAmerican(S, tau, E, r, sigma);
-toc
-fprintf('Evaluating pricing of American options using Monte-Carlo method (2nd try)...\n');
-tic
-montecarlo2 = montecarloAmerican(S, tau, E, r, sigma);
-toc
-
-% Generate table for Monte-Carlo methods
-methodNamesMonteCarlo = {'Try 1'; 'Try 2'};
-montecarlo = [montecarlo1; montecarlo2];
-mcTable = table(montecarlo, 'RowNames', methodNamesMonteCarlo)
+% % Using Monte-Carlo Methods
+% fprintf('Evaluating pricing of American options using Monte-Carlo method (1st try)...\n');
+% addpath('montecarlo');
+% tic
+% montecarlo1 = montecarloAmerican(S, tau, E, r, sigma);
+% toc
+% fprintf('Evaluating pricing of American options using Monte-Carlo method (2nd try)...\n');
+% tic
+% montecarlo2 = montecarloAmerican(S, tau, E, r, sigma);
+% toc
+%
+% % Generate table for Monte-Carlo methods
+% methodNamesMonteCarlo = {'Try 1'; 'Try 2'};
+% montecarlo = [montecarlo1; montecarlo2];
+% mcTable = table(montecarlo, 'RowNames', methodNamesMonteCarlo)
 
 
 % Using binomial trees for American and European options...

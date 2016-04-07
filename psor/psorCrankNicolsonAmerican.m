@@ -19,8 +19,8 @@ function  [ P ] = psorCrankNicolsonAmerican( S, tau, E, r, sigma, varargin )
 %   'numPartitionsT', nT - number of partitions in T
 
 % default values for optional arguments...
-defaultNumPartitionsX = 2000;
-defaultNumPartitionsT = 2000;
+defaultNumPartitionsX = 1050;
+defaultNumPartitionsT = 1050;
 
 % define inputParser to parse optional arguments.
 parser = inputParser;

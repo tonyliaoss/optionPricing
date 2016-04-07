@@ -12,7 +12,7 @@ function [ P ] = BiTreeAmerican( S, tau, E, r, sigma, varargin )
 %   'numPartitionsT', nT - number of time steps.
 
 % default values for optional arguments...
-defaultNumPartitionsT = 256;
+defaultNumPartitionsT = 8192;
 
 % define inputParser to parse optional arguments.
 parser = inputParser;
